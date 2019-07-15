@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <title>Questão 1 - Jogo da Velha</title>
+
+    <style>
+        .grid-container{
+            position: absolute;
+            display: grid;
+            grid-gap:50px 50px;
+            grid-template-columns: auto auto auto;
+
+            padding: 10px;
+            margin: 10px;
+            
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: #2196F3; 
+            border: 4px solid  black;
+        }
+        .item{
+            padding: 20px;
+
+            height: 75px;
+            width: 75px;
+
+            text-align: center;
+            line-height: 75px;
+            font-size: 35px;
+            border: 2px solid  black;
+            background-color: rgba(255, 255, 255, 0.8);            
+        }
+    </style>
+
+</head>
+<body>
+
+    <div class="grid-container">
+        <div class="item"></div>
+        <div class="item"></div>
+        <div class="item"></div>
+
+        <div class="item"></div>
+        <div class="item"></div>
+        <div class="item"></div>
+
+        <div class="item"></div>
+        <div class="item"></div>
+        <div class="item"></div>
+    </div>
+
+
+    <script>
+        var tabuleiro = new Array(9);
+        var jogador=false;
+
+        //Adiciona evento em todos divs
+        for(var i=1; i<=9; i++){
+            var elemento = document.getElementsByTagName("div")[i];
+
+            elemento.addEventListener("click", adicionaValor(i));
+        }
+
+        //Adiciona valor X ou O na posição clickada
+        function adicionaValor(k){
+            var Eclickado = document.getElementsByTagName("div")[k];
+
+            Eclickado.addEventListener("click", function fun()
+            {
+                if(Eclickado.textContent != "X" && Eclickado.textContent != "O"){ //Somente coloca novo valor se a posição clickada estiver vazia
+                    if(jogador == false){
+                        Eclickado.textContent="X";
+                        jogador=true;
+                        tabuleiro[k-1]="X";   
+                    }
+                    else{
+                        Eclickado.textContent="O";
+                        jogador=false;
+                        tabuleiro[k-1]="O";
+                    }
+                }
+                verifica();
+            });
+        }
+
+        //VERIFICA VENCEDORES
+        function verifica(){
+            if(tabuleiro.length >= 5){
+                //Verifica se tem vencedor nas diagonais
+                verificaDiagonais();
+                //Verifica se tem vencedor nas linhas
+                verificaLinhas();
+                //Verifica se tem vencedor nas colunas
+                verificaColunas();
+            }
+        }
+        
+        //VERIFICA VENCEDOR NAS DIAGONAIS
+        function verificaDiagonais(){
+            if(tabuleiro[0]=="X" && tabuleiro[4]=="X" && tabuleiro[8]=="X"){
+                alert("VENCEDOR: Jogador 01 !");
+                destacaDigonais(0); 
+            }
+            else if (tabuleiro[2]=="X" && tabuleiro[4]=="X" && tabuleiro[6]=="X"){
+                alert("VENCEDOR: Jogador 01 !");
+                destacaDigonais(2);    
+            }
+            else if(tabuleiro[0]=="O" && tabuleiro[4]=="O" && tabuleiro[8]=="O"){
+                alert("VENCEDOR: Jogador 02 !");
+                destacaDigonais(0); 
+            }
+            else if(tabuleiro[2]=="O" && tabuleiro[4]=="O" && tabuleiro[6]=="O"){
+                alert("VENCEDOR: Jogador 02 !");
+                destacaDigonais(2);
+            }
+        }
+
+        //VERIFICA VENCEDOR NAS LINHAS
+        function verificaLinhas(){
+            for(var i=0; i<=6; i+=3){
+                if(tabuleiro[i]=="X" && tabuleiro[i+1] =="X" && tabuleiro[i+2]=="X"){
+                    alert("VENCEDOR: Jogador 01 !");
+                    destacaLinhas(i);
+                }
+                if(tabuleiro[i]=="O" && tabuleiro[i+1] =="O" && tabuleiro[i+2]=="O"){
+                    alert("VENCEDOR: Jogador 02 !");
+                    destacaLinhas(i);
+                }
+            }
+        }
+        //VERIFICA VENCEDOR NAS COLUNAS
+        function verificaColunas(){
+            for(var i=0; i<=6; i++){
+                if(tabuleiro[i]=="X" && tabuleiro[i+3] =="X" && tabuleiro[i+6]=="X"){
+                    alert("VENCEDOR: Jogador 01 !");
+                    destacaColunas(i);
+                }
+                if(tabuleiro[i]=="O" && tabuleiro[i+3] =="O" && tabuleiro[i+6]=="O"){
+                    alert("VENCEDOR: Jogador 02 !");
+                    destacaColunas(i);
+                }
+            }
+        }
+
+    //FUNÇÕES PARA DESTACAR POSIÇÃO QUE VENCEU
+
+        //DESTACA DIAGONAL
+        function destacaDigonais(j){
+            j++;    //
+            console.log("entrou com:"+ j);
+            var aux = 9;
+            if(j == 1){
+                for( ; j<=aux; j+=4){
+                    console.log(j);
+                    var x = document.getElementsByTagName("div")[j];
+                    x.style.backgroundColor= "red";
+                }
+            }
+            else{
+                for( ; j<=aux-2; j+=2){
+                    console.log(j);
+                    var x = document.getElementsByTagName("div")[j];
+                    x.style.backgroundColor= "red";
+                }
+            }
+        }
+
+        //DESTACA LINHA
+        function destacaLinhas(j){
+            j++;
+            var aux = j+3;
+            for( ; j<aux; j++){
+                console.log(j);
+                var x = document.getElementsByTagName("div")[j];
+                x.style.backgroundColor= "red";
+            }
+        }
+
+        //DESTACA COLUNA
+        function destacaColunas(j){
+            j++;
+            var aux = 9;
+            for( ; j<=aux; j+=3){
+                console.log(j);
+                var x = document.getElementsByTagName("div")[j];
+                x.style.backgroundColor= "red";
+            }
+        }
+
+    </script>
+    
+</body>
+</html>
