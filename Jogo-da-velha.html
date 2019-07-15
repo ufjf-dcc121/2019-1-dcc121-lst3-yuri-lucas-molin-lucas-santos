@@ -3,36 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Questão 1 - Jogo da Velha</title>
-
-    <style>
-        .grid-container{
-            position: absolute;
-            display: grid;
-            grid-gap:50px 50px;
-            grid-template-columns: auto auto auto;
-
-            padding: 10px;
-            margin: 10px;
-            
-            left: 50%;
-            transform: translateX(-50%);
-            background-color: #2196F3; 
-            border: 4px solid  black;
-        }
-        .item{
-            padding: 20px;
-
-            height: 75px;
-            width: 75px;
-
-            text-align: center;
-            line-height: 75px;
-            font-size: 35px;
-            border: 2px solid  black;
-            background-color: rgba(255, 255, 255, 0.8);            
-        }
-    </style>
-
+    <link rel="stylesheet" href="estilos-Jogo-da-velha.css"/>
 </head>
 <body>
 
@@ -40,35 +11,38 @@
         <div class="item"></div>
         <div class="item"></div>
         <div class="item"></div>
-
         <div class="item"></div>
         <div class="item"></div>
         <div class="item"></div>
-
         <div class="item"></div>
         <div class="item"></div>
         <div class="item"></div>
     </div>
 
+    <div class=resultado>
+            <h1>Jogador 1 = X<br>Jogador 2 = O</h1>
+            <button id="bt">REINICIAR PARTIDA</button>
+    </div>
 
     <script>
         var tabuleiro = new Array(9);
-        var jogador=false;
+        var jogador=false;  //Variavel usada para alternar entre false = X e true = O
+        var botao = document.getElementById("bt");
 
-        //Adiciona evento em todos divs
+        //Adiciona evento em todos os <div>
         for(var i=1; i<=9; i++){
             var elemento = document.getElementsByTagName("div")[i];
-
             elemento.addEventListener("click", adicionaValor(i));
         }
 
-        //Adiciona valor X ou O na posição clickada
+        //Adiciona valor (X) ou (O) na posição clickada
         function adicionaValor(k){
             var Eclickado = document.getElementsByTagName("div")[k];
 
             Eclickado.addEventListener("click", function fun()
-            {
-                if(Eclickado.textContent != "X" && Eclickado.textContent != "O"){ //Somente coloca novo valor se a posição clickada estiver vazia
+            {   
+                //Somente coloca novo valor se a posição clickada estiver vazia.
+                if(Eclickado.textContent != "X" && Eclickado.textContent != "O"){
                     if(jogador == false){
                         Eclickado.textContent="X";
                         jogador=true;
@@ -80,13 +54,15 @@
                         tabuleiro[k-1]="O";
                     }
                 }
-                verifica();
+                verifica(); //Chama função para verificar sempre que adicionar uma nova jogada
             });
         }
 
         //VERIFICA VENCEDORES
-        function verifica(){
-            if(tabuleiro.length >= 5){
+        function verifica(){ 
+            //Somente começa verificar apos acontecer a minima quantidade
+            //de jogadas possiveis para existir um vencedor, que são 5 jogadas.
+            if(tabuleiro.length >= 5){ 
                 //Verifica se tem vencedor nas diagonais
                 verificaDiagonais();
                 //Verifica se tem vencedor nas linhas
@@ -129,6 +105,7 @@
                 }
             }
         }
+
         //VERIFICA VENCEDOR NAS COLUNAS
         function verificaColunas(){
             for(var i=0; i<=6; i++){
@@ -146,8 +123,9 @@
     //FUNÇÕES PARA DESTACAR POSIÇÃO QUE VENCEU
 
         //DESTACA DIAGONAL
-        function destacaDigonais(j){
-            j++;    //
+        function destacaDigonais(j)
+        {
+            j++;    //+1 porque os indices dos div no HTML iniciam no 1, e já os indice do vetor tabuleiro inicia no 0.
             console.log("entrou com:"+ j);
             var aux = 9;
             if(j == 1){
@@ -165,7 +143,6 @@
                 }
             }
         }
-
         //DESTACA LINHA
         function destacaLinhas(j){
             j++;
@@ -176,7 +153,6 @@
                 x.style.backgroundColor= "red";
             }
         }
-
         //DESTACA COLUNA
         function destacaColunas(j){
             j++;
@@ -187,8 +163,9 @@
                 x.style.backgroundColor= "red";
             }
         }
-
+        botao.addEventListener("click", function func(){
+            window.location.reload();
+        });
     </script>
-    
 </body>
 </html>
