@@ -7,7 +7,7 @@
 </head>
 <body>
 
-    <div class="grid-container">
+    <div id="jogo" class="grid-container">
         <div class="item"></div>
         <div class="item"></div>
         <div class="item"></div>
@@ -25,13 +25,14 @@
     </div>
 
     <script>
-        var tabuleiro = new Array(9);
+        var tabuleiro = [];
         var jogador=false;  //Variavel usada para alternar entre false = X e true = O
         var botao = document.getElementById("bt");
 
         //Adiciona evento em todos os <div>
         for(var i=1; i<=9; i++){
             var elemento = document.getElementsByTagName("div")[i];
+
             elemento.addEventListener("click", adicionaValor(i));
         }
 
@@ -40,7 +41,7 @@
             var Eclickado = document.getElementsByTagName("div")[k];
 
             Eclickado.addEventListener("click", function fun()
-            {   
+            {
                 //Somente coloca novo valor se a posição clickada estiver vazia.
                 if(Eclickado.textContent != "X" && Eclickado.textContent != "O"){
                     if(jogador == false){
@@ -59,37 +60,58 @@
         }
 
         //VERIFICA VENCEDORES
-        function verifica(){ 
-            //Somente começa verificar apos acontecer a minima quantidade
-            //de jogadas possiveis para existir um vencedor, que são 5 jogadas.
-            if(tabuleiro.length >= 5){ 
-                //Verifica se tem vencedor nas diagonais
-                verificaDiagonais();
-                //Verifica se tem vencedor nas linhas
-                verificaLinhas();
-                //Verifica se tem vencedor nas colunas
-                verificaColunas();
+        function verifica()
+        {
+            var nJogadas=0;
+            //VERIFICA QUANTAS JOGADAS ACONTECERAM
+            for(var i=0; i<tabuleiro.length; i++){
+                if(tabuleiro[i] == "X" || tabuleiro[i] == "O")
+                    nJogadas++;
+            }
+            console.log("Numero de jogadas: "+ nJogadas);
+
+            //Verifica se houve vencedores, apos ocorrer 
+            //o minimo possivel de jogadas para haver uma vitoria (5).
+            if(nJogadas>=5){
+                console.log("Verificando vencedores...");
+
+                if(verificaDiagonais() ){}
+                else if(verificaLinhas() ){}
+                else if(verificaColunas() ){}
+                //Se o tabuleiro esta completo e nenhuma função
+                //acima encontrou um vencedor, jogo não teve vencedor
+                else if(nJogadas == 9){ 
+                        alert("Nenhum Vencedor!");
+                        document.getElementById("jogo").style.backgroundColor="red";
+                }
             }
         }
+
+    //==== FUNÇÕES QUE VERIFICAM SE HOUVER VENCEDOR ====
         
         //VERIFICA VENCEDOR NAS DIAGONAIS
         function verificaDiagonais(){
             if(tabuleiro[0]=="X" && tabuleiro[4]=="X" && tabuleiro[8]=="X"){
                 alert("VENCEDOR: Jogador 01 !");
-                destacaDigonais(0); 
+                destacaDigonais(0);
+                return true;
             }
             else if (tabuleiro[2]=="X" && tabuleiro[4]=="X" && tabuleiro[6]=="X"){
                 alert("VENCEDOR: Jogador 01 !");
-                destacaDigonais(2);    
+                destacaDigonais(2);
+                return true;
             }
             else if(tabuleiro[0]=="O" && tabuleiro[4]=="O" && tabuleiro[8]=="O"){
                 alert("VENCEDOR: Jogador 02 !");
                 destacaDigonais(0); 
+                return true;
             }
             else if(tabuleiro[2]=="O" && tabuleiro[4]=="O" && tabuleiro[6]=="O"){
                 alert("VENCEDOR: Jogador 02 !");
                 destacaDigonais(2);
+                return true;
             }
+            return false;
         }
 
         //VERIFICA VENCEDOR NAS LINHAS
@@ -98,12 +120,15 @@
                 if(tabuleiro[i]=="X" && tabuleiro[i+1] =="X" && tabuleiro[i+2]=="X"){
                     alert("VENCEDOR: Jogador 01 !");
                     destacaLinhas(i);
+                    return true;
                 }
                 if(tabuleiro[i]=="O" && tabuleiro[i+1] =="O" && tabuleiro[i+2]=="O"){
                     alert("VENCEDOR: Jogador 02 !");
                     destacaLinhas(i);
+                    return true;
                 }
             }
+            return false;
         }
 
         //VERIFICA VENCEDOR NAS COLUNAS
@@ -112,57 +137,65 @@
                 if(tabuleiro[i]=="X" && tabuleiro[i+3] =="X" && tabuleiro[i+6]=="X"){
                     alert("VENCEDOR: Jogador 01 !");
                     destacaColunas(i);
+                    return true;
                 }
                 if(tabuleiro[i]=="O" && tabuleiro[i+3] =="O" && tabuleiro[i+6]=="O"){
                     alert("VENCEDOR: Jogador 02 !");
                     destacaColunas(i);
+                    return true;
                 }
             }
+            return false;
         }
 
-    //FUNÇÕES PARA DESTACAR POSIÇÃO QUE VENCEU
+    //==== FUNÇÕES PARA DESTACAR POSIÇÃO QUE VENCEU ====
 
         //DESTACA DIAGONAL
-        function destacaDigonais(j)
-        {
-            j++;    //+1 porque os indices dos div no HTML iniciam no 1, e já os indice do vetor tabuleiro inicia no 0.
-            console.log("entrou com:"+ j);
-            var aux = 9;
-            if(j == 1){
-                for( ; j<=aux; j+=4){
+        function destacaDigonais(j){
+            // J++ porque o indice do vetor "tabuleiro" inicia no 0, 
+            //porem o indice dos div no HTML inicia no 1.
+            j++;
+            var tam = 9;
+
+            if(j == 1){    //Se for a diagonal principal
+                for( ; j<=tam; j+=4){
                     console.log(j);
                     var x = document.getElementsByTagName("div")[j];
                     x.style.backgroundColor= "red";
                 }
             }
-            else{
-                for( ; j<=aux-2; j+=2){
+            else{    //Se for a diagonal secundaria  
+                for( ; j<=tam-2; j+=2){
                     console.log(j);
                     var x = document.getElementsByTagName("div")[j];
                     x.style.backgroundColor= "red";
                 }
             }
         }
+
         //DESTACA LINHA
         function destacaLinhas(j){
             j++;
-            var aux = j+3;
-            for( ; j<aux; j++){
+            var tam = j+3;  
+            for( ; j<tam; j++){
                 console.log(j);
                 var x = document.getElementsByTagName("div")[j];
                 x.style.backgroundColor= "red";
             }
         }
+
         //DESTACA COLUNA
         function destacaColunas(j){
             j++;
-            var aux = 9;
-            for( ; j<=aux; j+=3){
+            var tam = 9;
+            for( ; j<=tam; j+=3){
                 console.log(j);
                 var x = document.getElementsByTagName("div")[j];
                 x.style.backgroundColor= "red";
             }
         }
+
+        //BOTÃO REINICIAR PARTIDA
         botao.addEventListener("click", function func(){
             window.location.reload();
         });
